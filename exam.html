@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zephyr</title>
+<link href="https://fonts.googleapis.com/css2?family=Jameel+Noori+Nastaleeq&display=swap" rel="stylesheet">
+<style>
+    /* ===== Base Styling ===== */
+    body {
+        font-family: 'Jameel Noori Nastaleeq', serif;
+        direction: rtl;
+        background: linear-gradient(135deg, #fceabb, #f8b500);
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+    h1 {
+        text-align: center;
+        color: #4b0082;
+        margin-top: 20px;
+        font-size: 2em;
+        text-shadow: 1px 1px #fff;
+    }
+    h3 {
+        text-align: center;
+        color: #4b0082;
+        margin-top: 20px;
+        font-size: 2em;
+        text-shadow: 1px 1px #fff;
+    }
+    #timer {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+        color: #ff0000;
+        margin: 15px 0;
+    }
+    form {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .question {
+        background: #ffffffd9;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 10px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    .question:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 6px 18px rgba(0,0,0,0.2);
+    }
+    .question strong {
+        color: #4b0082;
+        font-size: 1.1em;
+    }
+    .options label {
+        display: block;
+        background: #f0f0f0;
+        margin: 8px 0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .options input[type="radio"] {
+        margin-left: 10px;
+    }
+    .options label:hover {
+        background: #ffe4b5;
+    }
+    #submit {
+        display: block;
+        width: 200px;
+        margin: 20px auto 40px;
+        padding: 12px 0;
+        font-size: 18px;
+        background: #4b0082;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    #submit:hover {
+        background: #7a2fbf;
+    }
+    #result {
+        text-align: center;
+        font-size: 1.5em;
+        color: #006400;
+        margin-bottom: 30px;
+    }
+    .correct {
+    background: #c8f7c5 !important;
+    border: 2px solid #2e8b57;
+}
+.wrong {
+    background: #f7c5c5 !important;
+    border: 2px solid #b22222;
+}
+
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+        h1 { font-size: 1.6em; }
+        .question { padding: 15px; margin: 10px 5px; }
+        .options label { padding: 8px 12px; }
+        #submit { width: 150px; font-size: 16px; padding: 10px 0; }
+    }
+    @media (max-width: 480px) {
+        h1 { font-size: 1.4em; }
+        #timer { font-size: 1em; }
+        .question strong { font-size: 1em; }
+        .options label { font-size: 0.9em; }
+    }
+</style>
+</head>
+<body>
+<h1>ZEPHYR TEXTILES LTD</h1>
+<h3> زیفرٹیکسٹائل فیکٹری سیفٹی ٹیسٹ</h3>
+<div id="timer">وقت باقی ہے: 05:00</div>
+<form id="quizForm"></form>
+<button id="submit">جمع کروائیں</button>
+<div id="result"></div>
+
+<script>
+let allQuestions = [
+  { q: "اگر کسی ملازم کو کام کی جگہ پر حفاظتی مسئلہ محسوس ہو تو سب سے پہلے کیا کرنا چاہیے؟", o:["نظرانداز کرنا","شکایات کے طریقہ کار کے ذریعے رپورٹ کرنا","خود مسئلہ حل کرنے کی کوشش کرنا","سپروائزر کے نوٹس کا انتظار کرنا"], a:1 },
+  { q: "صحیح شکایتی طریقہ کار میں کون سا شامل ہے؟", o:["مسئلہ کو خفیہ رکھنا","اسے مقررہ سیفٹی آفیسر کو رپورٹ کرنا","صرف ساتھیوں سے بات کرنا","سوشل میڈیا پر پوسٹ کرنا"], a:1 },
+  { q: "ٹیکسٹائل فیکٹری میں آگ کے ڈرل کتنی بار کرانے چاہئیں؟", o:["ہر 5 سال میں ایک بار","ہر ماہ ایک بار","سال میں کم از کم دو بار","صرف نئے ملازم کے شامل ہونے پر"], a:2 },
+  { q: "آگ کے ڈرل کا بنیادی مقصد کیا ہے؟", o:["فیکٹری صاف کرنا","ایمرجنسی ایویکوایشن پلان کو ٹیسٹ کرنا اور ملازمین کی حفاظت کو یقینی بنانا","مشینری کی جانچ کرنا","انشورنس کی لاگت کم کرنا"], a:1 },
+  { q: "کام کے دوران حفاظتی جوتے کیوں پہننے چاہیے؟", o:["صرف فیشن کے لیے","پیر زخمی ہونے سے بچانے کے لیے","مشین کے شور کے لیے","صرف سردیوں میں"], a:1 },
+  { q: "اگر کسی کو کیمیکل لگ جائے تو سب سے پہلا قدم کیا ہے؟", o:["پانی سے دھونا","کچھ نہ کرنا","کیمیکل کو رگڑنا","فوری سپروائزر کو رپورٹ کرنا"], a:0 },
+  { q: "مشینری کے قریب کام کرتے وقت کون سا حفاظتی اقدام ضروری ہے؟", o:["ڈھیلے کپڑے پہننا","لمبے بال بند کرنا","کوئی بھی احتیاط کی ضرورت نہیں","صرف دستانے پہننا"], a:1 },
+  { q: "فیکٹری میں شور کی سطح زیادہ ہو تو کیا کرنا چاہیے؟", o:["کچھ نہیں کرنا","حفاظتی ہیئرنگ یا ایئر پلگ استعمال کرنا","صرف اونچی آواز میں بات کرنا","فیکٹری چھوڑ دینا"], a:1 },
+  { q: "ایمرجنسی میں کس کو پہلے اطلاع دینی چاہیے؟", o:["دوست","فیکٹری سیفٹی آفیسر یا سپروائزر","کوئی بھی باہر والا","سوشل میڈیا پر پوسٹ کرنا"], a:1 },
+  { q: "دھول یا کپڑے کی ریشوں سے سانس لینے میں مشکلات ہو تو کیا کرنا چاہیے؟", o:["ماسک پہننا","کھڑکی بند کرنا","صرف پانی پینا","کچھ نہیں کرنا"], a:0 },
+  { q: "فائر ایکسٹینگویشر استعمال کرنے کے بعد کیا کرنا چاہیے؟", o:["اسے واپس اپنی جگہ رکھ دینا","کسی کو رپورٹ کرنا کہ آگ بجھ گئی","استعمال شدہ ایکسٹینگویشر کو رپورٹ اور دوبارہ چیک کروانا","کسی کو دکھانا"], a:2 },
+  { q: "اگر کسی کی انگلی مشین میں پھنس جائے تو سب سے پہلے کیا کرنا چاہیے؟", o:["فوراً مشین بند کرنا","ہاتھ کھینچنا","آواز نہ لگانا","پانی ڈالنا"], a:0 },
+  { q: "ایمرجنسی لائٹس کیوں ضروری ہیں؟", o:["صرف سجاوٹ کے لیے","اگر بجلی چلی جائے تو ایگزٹ راستے روشن رکھنے کے لیے","فیکٹری کا درجہ حرارت بتانے کے لیے","شور کم کرنے کے لیے"], a:1 }
+];
+
+// ===== Shuffle =====
+function getShuffledPaper() {
+  let qset = [...allQuestions];
+  for (let i = qset.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [qset[i], qset[j]] = [qset[j], qset[i]];
+  }
+  return qset;
+}
+
+// ===== Render =====
+function renderQuiz() {
+  const quizForm = document.getElementById('quizForm');
+  quizForm.innerHTML = '';
+  const questions = getShuffledPaper();
+
+  questions.forEach((q,index)=>{
+    let html = `<div class="question"><strong>سوال ${index+1}:</strong> ${q.q}<div class="options">`;
+    q.o.forEach((opt,i)=>{
+      html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+    });
+    html += '</div></div>';
+    quizForm.innerHTML += html;
+  });
+
+  return questions;
+}
+
+// ===== Timer =====
+let timeLeft = 5*60;
+let timerInterval;
+
+function startTimer() {
+  const timerEl = document.getElementById('timer');
+  timerInterval = setInterval(()=>{
+    let min = String(Math.floor(timeLeft/60)).padStart(2,'0');
+    let sec = String(timeLeft%60).padStart(2,'0');
+    timerEl.textContent = `وقت باقی ہے: ${min}:${sec}`;
+    timeLeft--;
+
+    if(timeLeft < 0){
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
+  },1000);
+}
+
+// ===== Submit (UPDATED PART) =====
+function submitQuiz(){
+  clearInterval(timerInterval);
+  let score = 0;
+
+  currentQuestions.forEach((q,i)=>{
+    const inputs = document.querySelectorAll(`input[name="q${i}"]`);
+
+    inputs.forEach((input,index)=>{
+      const label = input.parentElement;
+
+      if(index === q.a){
+        label.classList.add('correct');
+      }
+
+      if(input.checked && index !== q.a){
+        label.classList.add('wrong');
+      }
+
+      if(input.checked && index === q.a){
+        score++;
+      }
+
+      input.disabled = true;
+    });
+  });
+
+  document.getElementById('result').innerHTML =
+    `<h2>آپ کا نتیجہ: ${score} / ${currentQuestions.length}</h2>`;
+
+  document.getElementById('submit').disabled = true;
+}
+
+// ===== Start =====
+let currentQuestions = renderQuiz();
+startTimer();
+document.getElementById('submit').addEventListener('click', submitQuiz);
+</script>
+
+
+</body>
+</html>
